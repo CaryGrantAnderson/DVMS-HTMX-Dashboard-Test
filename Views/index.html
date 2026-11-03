@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>DVMS · Live dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232b6559'/%3E%3Ctext x='9' y='29' font-size='27' fill='white'%3ED%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/dashboard.css">
+  <script src="/vendor/htmx.min.js" defer></script>
+  <script src="/dashboard.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="DVMS dashboard home"><span class="brand-icon">D</span>DVMS<span class="brand-divider"></span><span class="brand-context">System monitor</span></a><span class="environment">LOCAL ENVIRONMENT</span></header>
+  <main>
+    <div class="page-heading"><div><p class="eyebrow">OVERVIEW</p><h1>Live dashboard<span>.</span></h1><p class="subtitle">A little pulse check on your system.</p></div><span class="live-badge"><span></span>Live updates</span></div>
+    <noscript><p class="error">Enable JavaScript to load the dashboard and its live updates.</p></noscript>
+    <div id="request-error" class="error" role="alert" hidden>Live update interrupted. Check the server connection; automatic updates will retry.</div>
+    <section class="metrics" aria-label="Live system metrics">
+      <article class="card counter-card"><div class="card-heading"><h2>Tick counter</h2><span class="panel-icon" aria-hidden="true">↗</span></div><div class="metric-line" hx-get="/api/counter?started={{started}}" hx-trigger="every 10s" hx-swap="innerHTML"><span class="metric-value">0</span><span class="metric-unit">ticks</span></div><p class="metric-note">One step forward, every 10 seconds</p><div class="card-footer"><span class="tiny-dot"></span>Starts at zero on page load<span class="interval">10s</span></div></article>
+      <article class="card"><div class="card-heading"><h2>Average CPU load</h2><span class="panel-icon" aria-hidden="true">▥</span></div><div hx-get="/api/cpu" hx-trigger="load, every 10s" hx-swap="innerHTML"><div class="metric-line"><span class="metric-value">—</span><span class="metric-unit">%</span></div><div class="meter"><span></span></div><p class="metric-note">Collecting CPU samples…</p></div><div class="card-footer"><span class="tiny-dot"></span>Host processor utilization<span class="interval">10s</span></div></article>
+      <article class="card"><div class="card-heading"><h2>Date &amp; time</h2><span class="panel-icon" aria-hidden="true">◷</span></div><div hx-get="/api/time" hx-trigger="load, every 1s" hx-swap="innerHTML"><span class="clock-value">--:--:--</span><span class="date-value">Loading server time…</span><p class="metric-note">Server time</p></div><div class="card-footer"><span class="tiny-dot"></span>Keeping you in sync<span class="interval">1s</span></div></article>
+    </section>
+    <section class="data-card" aria-labelledby="records-title"><div class="data-heading"><div><div class="title-row"><h2 id="records-title">Device activity</h2><span class="count-badge">10 records</span></div><p>Sample devices. Random data. Ready for your real API.</p></div><button type="button" hx-get="/api/records" hx-target="#records" hx-disabled-elt="this" hx-indicator="#refresh-icon"><span id="refresh-icon" aria-hidden="true">↻</span> Refresh data</button></div>
+      <div class="table-scroll"><table><caption class="sr-only">Random sample device activity; refresh to generate new values.</caption><thead><tr><th scope="col">DEVICE ID</th><th scope="col">NAME</th><th scope="col">TYPE</th><th scope="col">STATUS</th><th scope="col">UTILIZATION</th><th scope="col" class="numeric">LATENCY</th><th scope="col">UPDATED</th></tr></thead><tbody id="records" hx-get="/api/records" hx-trigger="load"><tr><td colspan="7">Loading sample data…</td></tr></tbody></table></div>
+      <div class="table-footer"><span><span class="sample-dot"></span>Demo dataset</span><span>Showing 10 of 10 records</span></div>
+    </section>
+    <footer class="page-footer"><span>DVMS <span class="footer-slash">/</span> Dashboard test</span><span>Powered by <strong>HTMX</strong> + <strong>ASP.NET Core</strong></span></footer>
+  </main>
+</body>
+</html>
